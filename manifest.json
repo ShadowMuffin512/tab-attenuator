@@ -1,0 +1,20 @@
+{
+
+  "manifest_version": 3,
+  "name": "Tab Attenuator",
+  "version": "1.0",
+
+  "description": "Pick a tab and set it as attenuated - all other tabs will quiet down while audio is playing!",
+
+  "icons": {
+    "48": "images/border-48.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.mozilla.org/*"],
+      "js": ["borderify.js"]
+    }
+  ]
+
+}
