@@ -32,54 +32,64 @@ async function setAttenuateButton(tabAttenuationButtonMode = null) {
 				: tabAttenuationButtonModes.off;
 	}
 
+    console.log("Setting attenuation button to: ", tabAttenuationButtonMode)
+
 	$('#attenuateButton')
 		.text(tabAttenuationButtonMode.text)
 		.on('click', tabAttenuationButtonMode.clickFunction);
 }
 
-function startAttenuatingTab() {
+
+async function startAttenuatingTab() {
 	getCurrentTab().then((currentTab) => {
 		console.log('Started attenuating: ', currentTab.id);
-		chrome.storage.local.set({ lastTabAttenuated: currentTab.id }).then(() => {
-			setAttenuateButton('on');
+		chrome.storage.local.set({ lastTabAttenuated: currentTab.id }).then(async () => {
+			console.log("storage set.")
+			await setAttenuateButton(tabAttenuationButtonModes.on);
 		});
 	});
 }
 
-function stopAttenuatingTab() {
+async function stopAttenuatingTab() {
 	console.log('Cleared attenuation');
-	chrome.storage.local.set({ lastTabAttenuated: null }).then(() => {
-		setAttenuateButton('off');
+	chrome.storage.local.set({ lastTabAttenuated: null }).then(async () => {
+		console.log("storage set.")
+		await setAttenuateButton(tabAttenuationButtonModes.off);
+
 	});
 }
 
-function changeVolume(newValue) {
+async function changeVolume(newValue) {
 	console.log('Volume changed to: ', newValue);
-	chrome.storage.local.set({ volume: newValue });
+	await chrome.storage.local.set({ volume: newValue });
 }
 
 async function setVolumeSliderInfo(newValue = null) {
 	if (!newValue) {
 		const res = await chrome.storage.local.get('volume');
 		const storedVolume = res.volume;
-		if (!storedVolume) newValue = 100;
-		else newValue = storedVolume;
+		if (!storedVolume) {
+			newValue = 100;
+			await chrome.storage.local.set({ volume: newValue });
+		} else newValue = storedVolume;
 		console.log('Volume initialized to: ', newValue);
 		$('#volumeSlider').val(newValue);
 	}
 	$('#volumeValue').text(`${newValue}%`);
 }
 
-function setVolumeSliderListener() {
-	$('#volumeSlider').on('change', () => {
-		changeVolume($(this).val());
-		setVolumeSliderInfo($(this).val());
+async function setVolumeSliderListener() {
+	$('#volumeSlider').on('input', async () => {
+		await setVolumeSliderInfo($('#volumeSlider').val());
 	});
+	$('#volumeSlider').on('change', async () => {
+		await changeVolume($('#volumeSlider').val());
+	})
 }
 
-$(function () {
+$(async function () {
 	console.log('EXTENSION LOADED');
-	setAttenuateButton();
-	setVolumeSliderListener();
-	setVolumeSliderInfo();
+	await setAttenuateButton();
+	await setVolumeSliderListener();
+	await setVolumeSliderInfo();
 });
