@@ -1,0 +1,22 @@
+{
+  "name": "tab-attenuator-extension",
+  "version": "1.0.0",
+  "description": "Pick a tab and set it as attenuated - all other tabs will quiet down while audio is playing!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShadowMuffin512/tab-attenuator.git"
+  },
+  "author": "Lior Dahan (ShadowMuffin)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShadowMuffin512/tab-attenuator/issues"
+  },
+  "homepage": "https://github.com/ShadowMuffin512/tab-attenuator#readme",
+  "devDependencies": {
+    "web-ext": "^7.4.0"
+  }
+}
