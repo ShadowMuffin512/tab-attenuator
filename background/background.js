@@ -1,5 +1,7 @@
 const storageCache = { volume: 100, lastTabAttenuated: null };
-
+chrome.runtime.onStartup.addListener(function () {
+	chrome.storage.local.clear();
+});
 chrome.storage.local.get().then((items) => {
 	console.log('init', items);
 	Object.assign(storageCache, items);
@@ -30,8 +32,7 @@ async function lowerVolumesInOtherTabs(reset = false) {
 			func: changeVolumeInTab,
 			args: [true, storageCache.volume],
 		});
-	}
-	catch {}
+	} catch {}
 
 	for (const tab of tabs) {
 		if (tab.id != storageCache.lastTabAttenuated) {
