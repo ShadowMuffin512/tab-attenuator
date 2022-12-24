@@ -1,8 +1,8 @@
 # Browser Tab Attenuator
 ![Logo](./images/logo-256.png)
 
-#### **at·ten·u·a·tion (əˌtenyo͝oˈāSH(ə)n)**
-##### noun
+### **at·ten·u·a·tion (əˌtenyo͝oˈāSH(ə)n)**
+#### noun
 *the reduction of the force, effect, or value of something.*
 
 
