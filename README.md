@@ -7,7 +7,7 @@
 
 
 ## What does this extension do?
-Pick any tab and attenuate all other tabs - pick a volume and they will be lowered to it!.
+Pick any tab and attenuate all other tabs - pick a volume and they will be lowered to it!
 
 ![Off](./images/attenuator-off.png)
 
@@ -22,7 +22,7 @@ Until this gets posted on the Chrome extension store, The only way to load this 
 5. Ensure the extension is installed by going to the extension toolbar (to the right of the URL bar).
 
 
-### Known Issues
+## Known Issues
 - Currently only supports Google Chrome.
 - Spamming the attenuation button can cause browser slowness.
 
