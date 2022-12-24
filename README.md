@@ -18,5 +18,4 @@ Pick any tab and attenuate all other tabs - pick a volume and they will be lower
 ### Known Issues
 - Currently only supports Google Chrome.
 - Spamming the attenuation button can cause browser slowness.
-- 
 
