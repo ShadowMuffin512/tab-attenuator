@@ -24,11 +24,15 @@ async function getAllTabs() {
 
 async function lowerVolumesInOtherTabs(reset = false) {
 	const tabs = await getAllTabs();
-	await chrome.scripting.executeScript({
-		target: { tabId: storageCache.lastTabAttenuated },
-		func: changeVolumeInTab,
-		args: [true, storageCache.volume],
-	});
+	try {
+		await chrome.scripting.executeScript({
+			target: { tabId: storageCache.lastTabAttenuated },
+			func: changeVolumeInTab,
+			args: [true, storageCache.volume],
+		});
+	}
+	catch {}
+
 	for (const tab of tabs) {
 		if (tab.id != storageCache.lastTabAttenuated) {
 			console.log(`Lowering volume in ${tab.id} to ${storageCache.volume}`);

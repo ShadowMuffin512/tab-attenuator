@@ -2,10 +2,12 @@ const tabAttenuationButtonModes = {
 	on: {
 		text: 'Stop Attenuating',
 		clickFunction: stopAttenuatingTab,
+		color: '#b72e2e'
 	},
 	off: {
 		text: 'Attenuate This Tab',
 		clickFunction: startAttenuatingTab,
+		color: '#0069ed'
 	},
 };
 
@@ -32,30 +34,47 @@ async function setAttenuateButton(tabAttenuationButtonMode = null) {
 				: tabAttenuationButtonModes.off;
 	}
 
-    console.log("Setting attenuation button to: ", tabAttenuationButtonMode)
+	console.log('Setting attenuation button to: ', tabAttenuationButtonMode);
 
 	$('#attenuateButton')
 		.text(tabAttenuationButtonMode.text)
+		.css("background-color", tabAttenuationButtonMode.color)
 		.on('click', tabAttenuationButtonMode.clickFunction);
 }
-
 
 async function startAttenuatingTab() {
 	getCurrentTab().then((currentTab) => {
 		console.log('Started attenuating: ', currentTab.id);
-		chrome.storage.local.set({ lastTabAttenuated: currentTab.id }).then(async () => {
-			console.log("storage set.")
-			await setAttenuateButton(tabAttenuationButtonModes.on);
-		});
+		chrome.storage.local
+			.set({ lastTabAttenuated: currentTab.id, lastTabAttenuatedTitle: currentTab.title })
+			.then(async () => {
+				console.log('storage set.');
+				setAttenuatedTabText(currentTab.title);
+				await setAttenuateButton(tabAttenuationButtonModes.on);
+			});
 	});
+}
+
+async function setAttenuatedTabText(tabTitle = undefined) {
+	if (tabTitle === undefined) {
+		const res = await chrome.storage.local.get('lastTabAttenuatedTitle');
+		if (res) tabTitle = res.lastTabAttenuatedTitle;
+	}
+	console.log('Setting text: ', tabTitle);
+	if (tabTitle) {
+		$('#currentlyAttenuated').html(`Currently Attenuated Tab:<br /><strong>${tabTitle}</strong>`);
+		$('#currentlyAttenuated').show();
+	} else {
+		$('#currentlyAttenuated').hide();
+	}
 }
 
 async function stopAttenuatingTab() {
 	console.log('Cleared attenuation');
 	chrome.storage.local.set({ lastTabAttenuated: null }).then(async () => {
-		console.log("storage set.")
+		console.log('storage set.');
+		setAttenuatedTabText(null);
 		await setAttenuateButton(tabAttenuationButtonModes.off);
-
 	});
 }
 
@@ -84,7 +103,7 @@ async function setVolumeSliderListener() {
 	});
 	$('#volumeSlider').on('change', async () => {
 		await changeVolume($('#volumeSlider').val());
-	})
+	});
 }
 
 $(async function () {
@@ -92,4 +111,5 @@ $(async function () {
 	await setAttenuateButton();
 	await setVolumeSliderListener();
 	await setVolumeSliderInfo();
+	await setAttenuatedTabText();
 });
